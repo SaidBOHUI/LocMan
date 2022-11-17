@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+// import React, { lazy } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LayoutNav from "./Components/layoutNav";
+import {createGlobalStyle} from 'styled-components';
+// import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
-function App() {
+
+const GlobalStyle = createGlobalStyle`
+*{
+  margin: 0;
+  padding: 0;
+  /* background: #2c3e50; */
+      /* background-color: #A5292A; */
+      /* background-color: #B8FAF0; , bleu clair*/
+  font-family: 'Open Sans', 'sans-serif';
+  overflow-x: hidden;
+}`  
+
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    {/* <Suspense fallback = {<Loader />}> /} */}
+    <GlobalStyle />
+    <Router>
+      <LayoutNav />
+      {/* {/ <Header /> /} */}
+        <Routes>
+          {/* {/ <Route index element={<Home />} /> /} */}
+          <Route path="user/login" element={<Login />} />
+          <Route path="/user/register" element={<Register />} />
+        </Routes>
+      {/* {/ </LayoutNav> /}
+      {/ <Footer /> /} */}
+    </Router>
+    {/* {/ </Suspense> */}
+    </>
   );
 }
+
 
 export default App;
