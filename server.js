@@ -19,7 +19,7 @@ app.use(fileUpload({
 
 //Routes
 app.use("/user", require('./routes/userRouter'))
-// app.use("/api", require('./routes/bookRouter'))
+app.use("/api", require('./routes/vehiculeRouter'))
 // app.use("/citation", require('./routes/citationRouter'))
 
 // connect to MongoDB

@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LayoutNav from "./Components/layoutNav";
 import {createGlobalStyle} from 'styled-components';
-// import Home from './pages/Home';
+import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
@@ -28,7 +28,7 @@ const App = () => {
       <LayoutNav />
       {/* {/ <Header /> /} */}
         <Routes>
-          {/* {/ <Route index element={<Home />} /> /} */}
+          <Route index element={<Home />} /> 
           <Route path="user/login" element={<Login />} />
           <Route path="/user/register" element={<Register />} />
         </Routes>
