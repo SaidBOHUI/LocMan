@@ -1,6 +1,7 @@
 const { find } = require('../models/userModel')
 const Vehicules = require('../models/vehiculeModel')
 const Vehicule = require('../models/vehiculeModel')
+const axios = require('axios');
 
 const vehiculeCtrl = {
     getVehicules : async(req, res) => {
@@ -15,11 +16,26 @@ const vehiculeCtrl = {
     createVehicule : async(req, res) => {
         console.log(req.body,'req');
         try {
-            const {plaque, marque, modele, disponibilite, description, photo} = req.body
+            const {plaque, marque, modele, disponibilite, description, file} = req.body
    
             const vehicule = await Vehicule.findOne({plaque})
             if (vehicule) return res.status(400).json({msg : "Un vehicule existe déja à cette immatriculation"})
-            
+
+            // console.log(file, 'file');
+            let options = {
+                method: 'POST',
+                url: 'http://localhost:8000/api/upload',
+                // url: /api/upload
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                  Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNzc4ZDg0ZjRjMDYzZTM5ZDY5MWI0MiIsImlhdCI6MTY2ODc3OTQ4NSwiZXhwIjoxNjY4ODY1ODg1fQ.YLttWeAiS57udUYUUc8eaLuz17wU61IUYwzdyZsrMfA'
+                },
+                files: file
+              };
+            const res = await axios(options)
+            const photo = res.url
+
             const newVehicule = new Vehicule({ plaque, marque, modele, disponibilite, description, photo })
 
             await newVehicule.save()

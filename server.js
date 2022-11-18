@@ -9,7 +9,7 @@ const bodyParser = require('body-parser')
 
 
 const app = express()
-app.use(express.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors())
@@ -20,7 +20,7 @@ app.use(fileUpload({
 //Routes
 app.use("/user", require('./routes/userRouter'))
 app.use("/api", require('./routes/vehiculeRouter'))
-// app.use("/citation", require('./routes/citationRouter'))
+app.use("/api", require('./routes/upload'))
 
 // connect to MongoDB
 const URI = process.env.MONGODB_URL;
