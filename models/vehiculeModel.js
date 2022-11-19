@@ -15,7 +15,7 @@ const vehiculeSchema = new Schema({
         unique: true,
     },
     photo : {
-        type : String,
+        type : Object,
         required : true
     },
     disponibilite : {

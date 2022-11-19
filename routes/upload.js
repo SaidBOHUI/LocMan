@@ -13,6 +13,7 @@ cloudinary.config({
 // Upload une image sur Cloudinary
 router.post('/upload', auth, authAdmin, (req, res) => {
     try {
+        // console.log(req, 'REQUEST UPLOAD');
         console.log(req.files, 'files');
         if (!req.files || Object.keys(req.files).length === 0){
             return res.status(400).json({msg : "Aucun fichier n'a été uploadé"})
@@ -20,7 +21,7 @@ router.post('/upload', auth, authAdmin, (req, res) => {
         
         const file = req.files.file;
         // const file = req.files.undefined;
-        console.log(file, 'file');
+        // console.log(file, 'file');
 
         if (file.size > 1024*1024){//if file.size > 1mb
             removeTmp(file.tempFilePath)
