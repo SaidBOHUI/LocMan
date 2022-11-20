@@ -26,8 +26,44 @@ const vehiculeSchema = new Schema({
     description : {
         type : String,
         required : true
+    },
+    type : {
+        type : String,
+        required : true
+    },
+    couleur : {
+        type : String,
+        required : true
+    },
+    nbPlaces : {
+        type : Number,
+        required : true
+    },
+    kilometrage : {
+        type : Number,
+        required : true
+    },
+    moteur : {
+        type : String,
+        required : true
+    },
+    embrayage : {
+        type : String,
+        required : true
+    },
+    prixLoc : {
+        type : Number,
+        required : true
+    },
+    prixKm : {
+        type : Number,
+        required : true
+    },
+    prixCaution : {
+        type : Number,
+        required : true
     }
-})
+},{timestamps : true})
 
 const Vehicules = model('Vehicule', vehiculeSchema);
 module.exports = Vehicules
