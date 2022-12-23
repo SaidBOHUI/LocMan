@@ -36,7 +36,7 @@ function Header() {
 	const handleLogout = async() => {
 		try {
 			await axios.get("/user/logout");         
-			// localStorage.removeItem("firstLogin");  
+			localStorage.removeItem("firstLogin");  
 			setIsLogged(false); 
 			return redirect("/");			
 		} catch (error) {

@@ -12,7 +12,7 @@ import { DataProvider } from "./Components/GlobalState";
 
 
 
-const GlobalStyle = createGlobalStyle
+const GlobalStyle = createGlobalStyle`
 *{
   margin: 0;
   padding: 0;
@@ -21,7 +21,7 @@ const GlobalStyle = createGlobalStyle
       /* background-color: #B8FAF0; , bleu clair*/
   font-family: "Open Sans", "sans-serif";
   overflow-x: hidden
-}
+}`
 
 const App = () => {
   return (
