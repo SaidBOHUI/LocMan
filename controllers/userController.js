@@ -5,7 +5,7 @@ const jwt = require ("jsonwebtoken")
 const userCtrl = {
     register: async(req, res) => {
         try {
-            const {email, password, firstName, lastName, city, CP, adresse, tel} = req.body;
+            const {email, password, firstName, lastName, city, CP, adresse, tel, permisNum} = req.body;
             console.log(req.body)
             const user = await Users.findOne({email : email})
             // console.log(typeof user);
@@ -18,7 +18,7 @@ const userCtrl = {
             //password encryption 
             const passwordHash = await bcrypt.hash(password, 10)
             const newUser = new Users({
-                firstName, lastName, email, password : passwordHash, city, CP, adresse, tel
+                firstName, lastName, email, password : passwordHash, city, CP, adresse, tel, permisNum
             })
 
             //Save in mongoDb
@@ -56,12 +56,14 @@ const userCtrl = {
             const {email, password} = req.body;
 
             const user = await Users.findOne({email})
-            console.log(user, 'user');
+            // console.log(user, 'user');
             if (!user){
+                console.log("NO USER FOUND");
                 return res.status(400).json({msg: "Aucun utilisateur n'est connu à cet email"})
             } 
             const isMatch = await bcrypt.compare(password, user.password)
             if (!isMatch){
+                console.log("WRONG PWD");
                 return res.status(400).json({msg : "Mot de passe incorrect"})
             }
             
@@ -75,8 +77,8 @@ const userCtrl = {
             })
             console.log("connected");
             res.json({accesstoken})
-
         } catch (error) {
+            console.log(error, "ERROR CTRL");
             return res.status(500).json(error.message)
         }
     },
@@ -89,7 +91,6 @@ const userCtrl = {
         }
     },
     refreshToken : async(req, res) => {
-        
         try {
             const rf_token = req.cookies.refreshtoken;
             

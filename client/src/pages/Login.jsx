@@ -11,28 +11,28 @@ import {
     Button,
     Typography,
     FormHelperText,
+    Box,
+    Link,
 } from '@mui/material';
 // const axios = require('axios');
 import LoginIcon from '@mui/icons-material/Login';
 import { useForm } from 'react-hook-form'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
-
-// import VisibilityIcon from '@mui/icons-material/Visibility';
-// import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'; 
-
-import { useState } from 'react';
+// import Visibility from '@mui/icons-material/Visibility';
+// import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { GlobalState } from '../Components/GlobalState';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 const Login = () => {
+    const state = useContext(GlobalState)
+	const [isLogged, setIsLogged] = state.userApi.isLogged
+
 
     const [erreur, setErreur] = useState({})
-    // const [errEmail, setErrEmail] = useState('')
-    // const [errPwd, setErrPwd] = useState('')
     const [email, setEmail] = useState('');
     const [pwd, setPwd] = useState('');
     const [showPassword, setShowPassword] = useState(false)
@@ -40,59 +40,30 @@ const Login = () => {
     const navigate = useNavigate()
     const {register, handleSubmit, watch, formState: {errors}} = useForm()
 
-    console.log(errors, 'errors')
 
-    // if (errors.email) {
-    //     setErrEmail(errors.email.message)
-    // }
-    // if (errors.password) {
-    //     setErrPwd(errors.password.message)
-    // }
-    // console.log(watch());
-
-    const AuSubmit = async(data) => {
-        console.log(data, 'data');
+    const connexion = async(data) => {
+        // console.log(data, 'data');
         try {
-            let reponse = await fetch("http://localhost:8000/user/login",{
-                method : "POST",
-                crossDomain : true,
-                headers : {
-                    "Content-Type" : "application/json",
-                    Accept : "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                },
-                body:JSON.stringify({
-                    email : data.email,
-                    password : data.password,
-                })
-            })
-            console.log(reponse, 'msg');
-            // if (reponse.msg === "Aucun utilisateur n'est connu à cet email"){
-            //     setErrEmail("Aucun utilisateur n'est connu à cet email")
-            //     return("mauvais email")
-            // }
-            // if (reponse.msg === "Mot de passe incorrect") {
-            //     setErrPwd("Mot de passe incorrect")
-            //     return("mauvais mot de passe")
-            // }else{
+            let reponse = await axios.post("/user/login", { email: data.email, password: data.password });            
+            //   console.log(reponse, 'RESSSSS');
                 if (reponse.status === 200) {
                     navigate('/')
-                    console.log('good');
+                    localStorage.setItem("firstLogin", true)
+                    setIsLogged(true);
+                    // window.location.href = "/";
                 }
                 else if (reponse.status === 400) {
+                    console.log("erreur status 400");
                     setErreur({msg: 'Au moins un de vos identifiants est incorrect'})
                 }
-            // }
         } catch (error) {
+            if (error.response.status === 400) {
+                console.log("erreur status 400");
+                setErreur({msg: 'Au moins un de vos identifiants est incorrect'})
+            }
             console.log(error, "Error dans l'API");
         }
     }
-
-
-
-    // const handleChange = (event) => {
-    //     setValues( event.target.value });
-    //   };    
 
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword)
@@ -106,51 +77,23 @@ const Login = () => {
         setPwd(event.target.value)
     }
 
-    // const handleSubmit = async(e) => {
-    //     e.preventDefault();
-    //     console.log(email, pwd, 'email, pwd');
-    //     // setEmail('');
-    //     // setPwd('');
-    //     // setSuccess(true);
-    //     try {
-    //         fetch("http://localhost:8000/user/login",{
-    //             method : "POST",
-    //             crossDomain : true,
-    //             headers : {
-    //                 "Content-Type" : "application/json",
-    //                 Accept : "application/json",
-    //                 "Access-Control-Allow-Origin": "*",
-    //             },
-    //             body:JSON.stringify({
-    //                 email : email,
-    //                 password : pwd,
-    //             })
-    //         })
+    // console.log(erreur, "ERREEUR");
 
-    //         console.log('good');
-    //         navigate('/')
-    //     } catch (error) {
-    //         console.log(error, "Error dans l'API");
-    //     }
-    // }
-      console.log(erreur, 'erreur');
       return(
         <Container maxWidth="xs" sx={{border:'#285181 solid 2px', padding: '3rem', marginTop:'5rem'}}>
-
-            <form onSubmit={handleSubmit(AuSubmit)}>
+            <form onSubmit={handleSubmit(connexion)}>
                 <Typography variant='h5' sx={{textAlign:'center', color:'#285181'}}>Connexion</Typography>
                 <p style={{textAlign: 'center', margin: '1rem 0', color: '#CC0001'}}>{erreur?.msg}</p>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <TextField {...register("email", {required : 'Ce champ est requis'})} id="email" label="email" variant="standard" fullWidth sm={{ m: 1 }}/>  
-                        <FormHelperText id="component-error-text" error={true}>{errors.email?.message || erreur !== ''?.erreur}</FormHelperText>
-                    </Grid>
-                    <Grid item xs={12}>
+                        <TextField {...register("email", {required : 'Ce champ est requis'})} id="email" label="email" variant="standard" inputProps={{autoComplete: 'username'}} fullWidth sm={{ m: 1 }}/>  
+                        <FormHelperText id="component-error-text" error={true}>{(errors.email && errors.email.message) || (erreur?.erreur ?? '')}</FormHelperText>                        
                         <FormControl variant="standard" fullWidth sx={{ m: 1 }}>
                             <InputLabel htmlFor="adornment-password">Password</InputLabel>
                             <Input
                                 id="adornment-password"
                                 type={showPassword ? 'text' : 'password'}
+                                autoComplete="current-password"
                                 value={pwd}
                                 {...register("password", {required : 'Ce champ est requis', minLength : {value : 6, message: 'Votre mot de passe doit faire au moins 6 caractères'}})}
                                 onChange={onPwdChange}
@@ -168,7 +111,7 @@ const Login = () => {
                                 }
                                 label="Password"
                             />
-                            <FormHelperText id="component-error-text" error={true}>{errors.password?.message || erreur !== ''?.erreur}</FormHelperText>
+                            <FormHelperText id="component-error-text" error={true}>{(errors.password && errors.password.message) || (erreur?.erreur ?? '')}</FormHelperText>
                         </FormControl>
                         {/* <span>{errors.password?.message}</span> */}
                     </Grid>
@@ -183,6 +126,14 @@ const Login = () => {
                             Connexion
                             {/* <Button type="submit" color='secondary' sx={{cursor : 'pointer', justifyContent: 'center', alignItems: 'center', m:'2rem auto 0'}}> */}
                         </Button>
+                    <Box sx={{width:"100%", display:"flex", justifyContent: "space-between", m:3, mb:0, mt:5}}>
+                        <Link to="/register" sx={{cursor: "pointer"}}>
+                            <Typography variant="caption">Créer un compte</Typography>
+                        </Link>
+                        <Link to="/pwdForgotten" sx={{cursor: "pointer"}}>
+                            <Typography variant="caption">Mot de passe oublié</Typography>
+                        </Link>
+                    </Box>
                     {/* </Grid> */}
                 </Grid>
             </form>
