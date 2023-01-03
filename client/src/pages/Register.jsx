@@ -35,16 +35,14 @@ const Register = () => {
     const AuSubmit = async(data) => {
         try {
             console.log(data, "data");
-            let reponse = await axios.post("/user/register",{ firstName : data.firstName, lastName : data.lastName, email : data.email, password : data.password, tel : data.tel, adresse: data.adresse, CP : data.cp, city: data.ville, permisNum: data.permis})
+            await axios.post("/user/register",{ firstName : data.firstName, lastName : data.lastName, email : data.email, password : data.password, tel : data.tel, adresse: data.adresse, CP : data.cp, city: data.ville, permisNum: data.permis})
             // console.log(data, 'data');
-            if (reponse.status === 200) {
+            localStorage.setItem("firstLogin", true)
                 navigate('/')
                 console.log('good');
-            }
         } catch (error) {
             console.log(error);
         }
-
     }
 
 

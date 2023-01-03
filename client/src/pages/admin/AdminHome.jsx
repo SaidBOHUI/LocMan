@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { GlobalState } from "../../Components/GlobalState";
+import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import BrushIcon from '@mui/icons-material/Brush';
@@ -24,6 +25,7 @@ import { Box,
     DialogContentText,
     Alert,
     Snackbar,
+    Link,
     DialogActions} from '@mui/material';
 import axios from 'axios'
 
@@ -31,8 +33,11 @@ import axios from 'axios'
 function AdminHome(){
     const state = useContext(GlobalState)
 	const [isAdmin, setIsAdmin] = state.userApi.isAdmin
-	const [isSuperAdmin, setIsSuperAdmin] = state.userApi.isSuperAdmin
+    const [vehicules] = state.vehiculesApi.vehicules
+	// const [isSuperAdmin, setIsSuperAdmin] = state.userApi.isSuperAdmin
     const [token, setToken] = state.token
+    const [showComponent, setShowComponent] = useState(true);
+    const navigate = useNavigate();
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
@@ -54,50 +59,43 @@ function AdminHome(){
     },
     }));
 
-    const [vehicules, setVehicules] = useState([])
     const [open, setOpen] = useState(false)
     const [openSuccess, setOpenSuccess] = useState(false)
 
     function showSuccessMessage(){
         setOpenSuccess(true);
     }
-    
     function hideSuccessMessage(){
         setOpenSuccess(false);
-    };
-
+    }
     function handleClickOpen(){
         setOpen(true)
     }
-
     function handleClose (){
         setOpen(false)
     }
-
-    const getVehicules = async() => {
-        try {
-          let options = {
-            url : 'http://localhost:8000/api/vehicules',
-            method:'GET',
-            headers : {
-              "Content-Type" : "application/json",
-              "Accept" : "application/json"
-            },
-          }
-          let res = await axios(options)
-          setVehicules(res.data.vehicules)
-        } catch (error) {
-          console.log(error)
-        }
-    }
-
-
+    // const getVehicules = async() => {
+    //     try {
+    //       let options = {
+    //         url : 'http://localhost:8000/api/vehicules',
+    //         method:'GET',
+    //         headers : {
+    //           "Content-Type" : "application/json",
+    //           "Accept" : "application/json"
+    //         },
+    //       }
+    //       let res = await axios(options)
+    //       setVehicules(res.data.vehicules)
+    //     } catch (error) {
+    //       console.log(error)
+    //     }
+    // }
     async function handleDelete (id){
         try {
-        let res = await axios.delete(`/api/vehicules/${id}`, {headers: {Authorization : token}})
+        let res = await axios.delete(`/api/vehicule/${id}`, {headers: {Authorization : token}})
         setOpen(false)
             console.log(res, "Véhicule supprimé");
-            getVehicules()
+            // getVehicules()
             showSuccessMessage()
             // return("Véhicule supprimé")
         } catch (error) {
@@ -105,21 +103,38 @@ function AdminHome(){
         }
     }
 
+    // function noAdminReject(){
+    //     if (condition) {
+            
+    //     }
+    // }
+
+    function goToEdit(id){
+        navigate(`/admin/vehicule/${id}`, {state: {id: id}})
+    }
+
     useEffect(() => {
-        getVehicules()
-      }, [])
+        // getVehicules()
+        if (!isAdmin) {
+        // if (!isAdmin && !isSuperAdmin) {
+            const timer = setTimeout(() => {
+                setShowComponent(false);
+                navigate('/');
+              }, 5000); // 5 seconds          
+            return () => clearTimeout(timer);            
+        }
+      }, [showComponent])
 
-
-        if (!isAdmin && !isSuperAdmin) {
-            // if (isLogged && (isAdmin || isSuperAdmin) ) {
-                    // return (<Redirect to="/" />)
-                return(
-                    <Box sx={{m:5, mtop:0, p:5}}>
-                        {/* La récupération des véhicules a échouée */}
-                        Vous n'avez pas l'autorisation d'acceder à cette page
-
-                    </Box>
-                )
+        if (!isAdmin) {
+        // if (!isAdmin && !isSuperAdmin) {
+                    if (!showComponent) {
+                        return (
+                            <Box sx={{m:5, mtop:0, p:5}}>
+                                {/* La récupération des véhicules a échouée */}
+                                Vous n'avez pas l'autorisation d'acceder à cette page. Vous allez être redirigé vers la page d'accueil
+                            </Box>
+                        )
+                    }
         }else{
             if (typeof vehicules === 'object' && vehicules.constructor === Array && vehicules.length !== 0) {
                 return (
@@ -163,9 +178,11 @@ function AdminHome(){
                                         <StyledTableCell align="left">{vehicule.prixCaution} €</StyledTableCell>
                                         <StyledTableCell align="left">
                                             <Box sx={{display: "flex", justifyContent: "space-around"}}>
-                                                <IconButton aria-label="edit" sx={{color: "#214461"}}>
-                                                    <BrushIcon />
-                                                </IconButton>
+                                                {/* <Link to = "/admin/vehicules/edit"> */}
+                                                    <IconButton aria-label="edit" sx={{color: "#214461"}} onClick={() => goToEdit(vehicule._id)}>
+                                                        <BrushIcon />
+                                                    </IconButton>
+                                                {/* </Link> */}
                                                 <IconButton aria-label="delete" sx={{color: "#A91F3C"}} onClick={handleClickOpen}>
                                                     <DeleteIcon />
                                                 </IconButton>

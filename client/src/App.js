@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminHome from "./pages/admin/AdminHome";
+import EditVehicule from "./pages/admin/EditVehicule";
 // import React, {createContext, useState} from "react";
 import { DataProvider } from "./Components/GlobalState"; 
 // import { userContext } from "./userContext";
@@ -25,8 +26,6 @@ const GlobalStyle = createGlobalStyle`
 
 const App = () => {
   return (
-    <>
-       {/* <userContext.Provider>  */}
         <DataProvider>
          {/* <Suspense fallback = {<Loader />}>  */}
         <GlobalStyle />
@@ -35,18 +34,17 @@ const App = () => {
            {/* {/ <Header /> /}  */}
             <Routes>
               <Route index element={<Home />} /> 
-              <Route path="user/login" element={<Login />} />
+              <Route path="/user/login" element={<Login />} />
               <Route path="/user/register" element={<Register />} />
               <Route path="/admin/vehicules" element={<AdminHome />} />
+              <Route path="/admin/vehicule/:id" element={<EditVehicule />} />
             </Routes>
             {/* </LayoutNav>  */}
           {/* <Footer /> */} 
         </Router>
          {/*  </Suspense>  */}
         </DataProvider>
-       {/* </userContext.Provider>  */}
-    </>
-  );
+  )
 }
 
 

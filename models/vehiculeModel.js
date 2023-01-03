@@ -16,7 +16,7 @@ const vehiculeSchema = new Schema({
     },
     photo : {
         type : Object,
-        required : true
+        required : false
     },
     disponibilite : {
         type : Boolean,

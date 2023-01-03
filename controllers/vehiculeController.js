@@ -114,11 +114,28 @@ const vehiculeCtrl = {
 
     updateVehicule : async(req, res) => {
         try {
+            console.log('in controller');
+            // const {plaque, marque, modele, disponibilite, description, type, couleur, nbPlaces, kilometrage, moteur, embrayage, prixLoc, prixKm, prixCaution} = req.body 
             const {plaque, marque, modele, disponibilite, description, photo, type, couleur, nbPlaces, kilometrage, moteur, embrayage, prixLoc, prixKm, prixCaution} = req.body 
             if (!photo)return(res.status(400).json({msg: "Aucune image upload "}))
            
             await Vehicule.findOneAndUpdate({_id : req.params.id},{plaque, marque, modele, disponibilite, description, photo, type, couleur, nbPlaces, kilometrage, moteur, embrayage, prixLoc, prixKm, prixCaution})
-            res.json({msg : 'Infos du véhicule modifié'})
+            res.json({msg : 'Infos du véhicule modifiées'})
+        } catch (error) {
+            console.log(error, 'error back');
+            return res.status(500).json({msg : error.message})
+        }
+    },
+
+    getDataVehicule : async(req, res) => {
+        try {
+            let vehicule = await Vehicule.findById(req.params.id)
+            // console.log(vehicule, 'vehicule in controller');
+            res.json({
+                status : 'success',
+                vehicule : vehicule 
+            })
+
         } catch (error) {
             return res.status(500).json({msg : error.message})
         }

@@ -22,46 +22,40 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 // import Visibility from '@mui/icons-material/Visibility';
 // import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { GlobalState } from '../Components/GlobalState';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
 const Login = () => {
+    // const [user, setUser] = useState({email:'', password:''})
     const state = useContext(GlobalState)
 	const [isLogged, setIsLogged] = state.userApi.isLogged
-
-
+	const [isAdmin, setIsAdmin] = state.userApi.isLogged
+	// const [isSuperAdmin, setIsSuperAdmin] = state.userApi.isLogged
     const [erreur, setErreur] = useState({})
-    const [email, setEmail] = useState('');
     const [pwd, setPwd] = useState('');
     const [showPassword, setShowPassword] = useState(false)
 
     const navigate = useNavigate()
-    const {register, handleSubmit, watch, formState: {errors}} = useForm()
+    const {register, handleSubmit, formState: {errors}} = useForm()    
 
 
-    const connexion = async(data) => {
+    const connexion = async(data, event) => {
+        // event.preventDefault()
         // console.log(data, 'data');
+        let {email, password} = data
         try {
-            let reponse = await axios.post("/user/login", { email: data.email, password: data.password });            
-            //   console.log(reponse, 'RESSSSS');
-                if (reponse.status === 200) {
-                    navigate('/')
-                    localStorage.setItem("firstLogin", true)
-                    setIsLogged(true);
-                    // window.location.href = "/";
-                }
-                else if (reponse.status === 400) {
-                    console.log("erreur status 400");
-                    setErreur({msg: 'Au moins un de vos identifiants est incorrect'})
-                }
+            await axios.post("/user/login", { email, password });            
+            localStorage.setItem("firstLogin", true)
+            setIsLogged(true);
+            // navigate('/')
+            console.log(isAdmin, 'isAdmin');
+            isAdmin ? window.location.href = '/admin/vehicules' : window.location.href = '/'
+            // isAdmin || isSuperAdmin ? window.location.href = '/admin/vehicules' : window.location.href = '/'
         } catch (error) {
-            if (error.response.status === 400) {
                 console.log("erreur status 400");
                 setErreur({msg: 'Au moins un de vos identifiants est incorrect'})
-            }
-            console.log(error, "Error dans l'API");
         }
     }
 

@@ -2,7 +2,8 @@ import CategoryCard from "../Components/categoryCard"
 import { Container, Stack, Grid, Item, Typography, IconButton,Box, Button, TextField, InputAdornment} from '@mui/material';
 // import { AirportShuttleIcon, SearchIcon} from '@mui/icons-material';
 import banner from '../assets/banners/banner7.png';
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { GlobalState } from "../Components/GlobalState";
 
 
 const Home = () => {
@@ -11,6 +12,11 @@ const Home = () => {
     const [carBg, setCarBg] = useState('#490648')
     const [camColor, setCamColor] = useState('#000000')
     const [camBg, setCamBg] = useState('#FFFFFF')
+    const state = useContext(GlobalState)
+    const [isLogged, setIsLogged] = state.userApi.isLogged;
+    const [isAdmin, setIsAdmin] = state.userApi.isAdmin;
+	// const [isSuperAdmin, setIsSuperAdmin] = state.userApi.isLogged
+
 
 
     const handleLilButtons = ()=> {

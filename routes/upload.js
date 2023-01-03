@@ -14,14 +14,14 @@ cloudinary.config({
 router.post('/upload', auth, authAdmin, (req, res) => {
     try {
         // console.log(req, 'REQUEST UPLOAD');
-        console.log(req.files, 'files');
+        // console.log(req, 'req');
         if (!req.files || Object.keys(req.files).length === 0){
             return res.status(400).json({msg : "Aucun fichier n'a été uploadé"})
         }
         
-        const file = req.files.file;
+        const file = req.files.photo;
         // const file = req.files.undefined;
-        // console.log(file, 'file');
+        console.log(file, 'file');
 
         if (file.size > 1024*1024){//if file.size > 1mb
             removeTmp(file.tempFilePath)

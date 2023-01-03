@@ -7,10 +7,10 @@ router.route('/vehicules')
 .get(vehiculeCtrl.getVehicules)
 .post(auth, authAdmin, vehiculeCtrl.createVehicule)
 
-router.route('/vehicules/:id')
+router.route('/vehicule/:id')
 .delete(auth, authAdmin, vehiculeCtrl.deleteVehicule)
 .put(auth, authAdmin, vehiculeCtrl.updateVehicule)
-
+.get(vehiculeCtrl.getDataVehicule)
 
 
 
