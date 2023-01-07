@@ -18,7 +18,22 @@ import {
 
 
 
-const EditVehicule = () => {
+const CreateVehicule = () => {
+    // const [marque, setMarque] = useState('')  
+    // const [modele, setModele] = useState('')  
+    // const [type, setType] = useState('')  
+    // const [couleur, setCouleur] = useState('')  
+    // const [nbPlaces, setNbPlaces] = useState('')  
+    // const [kilometrage, setKilometrage] = useState('')  
+    // const [moteur, setMoteur] = useState('')  
+    // const [embrayage, setEmbrayage] = useState('')  
+    // const [plaque, setPlaque] = useState('')  
+    // const [prixLoc, setPrixLoc] = useState('')  
+    // const [PrixKm, setPrixKm] = useState('')  
+    // const [PrixCaution, setPrixCaution] = useState('')  
+    // const [disponibilite, setDisponibilite] = useState(false)  
+    // const [photos, setPhotos] = useState('')  
+    // const [description, setDescription] = useState('')  
     const [box, setBox] = useState(false)
     const id = useParams().id
     const state = useContext(GlobalState)
@@ -27,36 +42,10 @@ const EditVehicule = () => {
     const [fileName, setFileName] = useState(null)
     const label = { inputProps: { 'aria-label': 'Disponibilité' } };
     const [fichier, setFichier] = useState({})
-    const {control, handleSubmit, register, watch, name, reset,setValue, rules, formState: {errors}} = useForm(
-        {
-            defaultValues: async() => {
-                let res = await axios.get(`/api/vehicule/${id}`).data.vehicule
-                setCar(res)
-                return(res)
-            }
-        }
-    )
+    const {control, handleSubmit, register, watch, name, reset,setValue, rules, formState: {errors}} = useForm( )
 
 
     useEffect(() => {
-        async function dataVehicule(){
-            try {
-                let res = await axios.get(`/api/vehicule/${id}`)
-                // console.log(await (await axios.get(`/api/vehicule/${id}`)).data.vehicule, 'tt ça');
-                let dataVehicule = res.data.vehicule
-                // console.log(dataVehicule, 'vehicule');
-                setCar(dataVehicule)
-                reset(dataVehicule);
-                dataVehicule.disponibilite === true ? setBox(true): setBox(false)
-                setValue('embrayage')
-            } catch (error) {
-                console.log(error);
-            }
-        }    
-        dataVehicule();
-    }, [id, reset])
-    useEffect(() => {
-        
     }, [])
 
     const handleCheck = (event) => {
@@ -87,10 +76,8 @@ const EditVehicule = () => {
                 photo = res.data
                 // console.log(photo, 'photo');
             }
-            let modif = await axios.put(`/api/vehicule/${id}`,{marque : marque, modele:modele, type:type, couleur:couleur, nbPlaces:nbPlaces, kilometrage:kilometrage, moteur:moteur, embrayage:embrayage, plaque:plaque, prixLoc:prixLoc, prixKm:prixKm, prixCaution:prixCaution, photo:photo, description:description, disponibilite:disponibilite}, {headers: {Authorization : token}})
-            console.log(modif , 'modif');
-            let destroy = await axios.post('/api/destroy', data.photo, {headers: {Authorization : token}})
-            console.log(destroy, 'destroy');
+            let create = await axios.post('/api/vehicules',{marque : marque, modele:modele, type:type, couleur:couleur, nbPlaces:nbPlaces, kilometrage:kilometrage, moteur:moteur, embrayage:embrayage, plaque:plaque, prixLoc:prixLoc, prixKm:prixKm, prixCaution:prixCaution, photo:photo, description:description, disponibilite:disponibilite}, {headers: {Authorization : token}})
+            console.log(create , 'create');
             return(window.location.href = '/admin/vehicules')     
         } catch (error) {
             console.log(error);
@@ -162,7 +149,6 @@ const EditVehicule = () => {
                         control={control}
                         helperText={"modele"}
                         fullWidth
-                        defaultValue= {car.modele}
                     />
                     <Controller
                         render={({type}) => (
@@ -268,7 +254,7 @@ const EditVehicule = () => {
                         control={control}
                         helperText={"embrayage"}
                         fullWidth
-                        placeholder={car.embrayage}
+                        defaultValue={''}
                     />
                     </Box>
                     <Box
@@ -353,7 +339,6 @@ const EditVehicule = () => {
                             fullWidth
                         />
                         <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        {!watch('files') || watch('files').length === 0 ? (
                             <Controller
                             render={({files}) => (
                                     <Button
@@ -380,7 +365,8 @@ const EditVehicule = () => {
                             label={"photo"}
                             type="file"
                             fullWidth
-                        />) : (<span>{fileName}</span>)}
+                            />
+                            <span>{fileName}</span>
                         </Box>
                         <Box></Box>
                     </Box>
@@ -434,4 +420,4 @@ const EditVehicule = () => {
     );
 }
 
-export default EditVehicule
+export default CreateVehicule

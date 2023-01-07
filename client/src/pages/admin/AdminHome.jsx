@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import BrushIcon from '@mui/icons-material/Brush';
+import AddIcon from '@mui/icons-material/Add';
 // import Redirect from 'react-router-dom';
 
 
@@ -58,6 +59,15 @@ function AdminHome(){
         border: 0,
     },
     }));
+      
+      const ColorButton = styled(Button)(({ theme }) => ({
+        color: theme.palette.getContrastText('#9C27B0'),
+        backgroundColor: '#9C27B0',
+        '&:hover': {
+          backgroundColor: "#7B1EA2",
+        },
+      }));
+      
 
     const [open, setOpen] = useState(false)
     const [openSuccess, setOpenSuccess] = useState(false)
@@ -113,6 +123,10 @@ function AdminHome(){
         navigate(`/admin/vehicule/${id}`, {state: {id: id}})
     }
 
+    function goToCreate(){
+        navigate('/admin/vehicule/create')
+    }
+
     useEffect(() => {
         // getVehicules()
         if (!isAdmin) {
@@ -139,7 +153,19 @@ function AdminHome(){
             if (typeof vehicules === 'object' && vehicules.constructor === Array && vehicules.length !== 0) {
                 return (
                     <>
+                    {/* <Box sx={{display:'flex', alignItems:'center'}}> */}
+                    {/* </Box> */}
                         <Box sx={{mb:5}}>
+                        {/* <IconButton variant="outlined" startIcon={<AddIcon />} sx={{display:'flex', alignItems: 'center', margin:'auto', mt:5}}> 
+                            <Link to='/' sx={{textDecoration:"none"}}>
+                                Ajouter
+                            </Link>
+                        </IconButton> */}
+                        <ColorButton aria-label="edit" startIcon={<AddIcon />} sx={{display:'flex', alignItems: 'center', margin:'auto', mt:5}} onClick={() => goToCreate()}>
+                            Ajouter
+                        </ColorButton>
+
+
                         {/* <Alert severity="success" onClose={hideSuccessMessage} autoHideDuration={3000} variant="filled">
                             Véhicule supprimé avec succès !
                         </Alert> */}

@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminHome from "./pages/admin/AdminHome";
 import EditVehicule from "./pages/admin/EditVehicule";
+import CreateVehicule from "./pages/admin/CreateVehicule";
 // import React, {createContext, useState} from "react";
 import { DataProvider } from "./Components/GlobalState"; 
 // import { userContext } from "./userContext";
@@ -38,6 +39,7 @@ const App = () => {
               <Route path="/user/register" element={<Register />} />
               <Route path="/admin/vehicules" element={<AdminHome />} />
               <Route path="/admin/vehicule/:id" element={<EditVehicule />} />
+              <Route path="/admin/vehicule/create" element={<CreateVehicule />} />
             </Routes>
             {/* </LayoutNav>  */}
           {/* <Footer /> */} 
