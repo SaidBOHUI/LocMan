@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useForm, Controller} from "react-hook-form"
 import { GlobalState } from '../../Components/GlobalState';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { 
     Box, 
@@ -20,9 +20,12 @@ import {
 
 const EditVehicule = () => {
     const [box, setBox] = useState(false)
+    const navigate = useNavigate()
     const id = useParams().id
     const state = useContext(GlobalState)
     const [token, setToken] = state.token
+    // const [isAdmin, setIsAdmin] = state.UserApi.isAdmin
+    
     const [car, setCar] = useState([])
     const [fileName, setFileName] = useState(null)
     const label = { inputProps: { 'aria-label': 'Disponibilité' } };
@@ -56,7 +59,14 @@ const EditVehicule = () => {
         dataVehicule();
     }, [id, reset])
     useEffect(() => {
-        
+        if (localStorage.getItem('fistLogin') === "true") {
+            if (!localStorage.getItem('roleUser') === "1") {
+            // if (!isAdmin) {
+               navigate('/') 
+            } 
+        }else{
+            navigate('/user/login')
+        }
     }, [])
 
     const handleCheck = (event) => {
@@ -68,7 +78,7 @@ const EditVehicule = () => {
     const onSubmit = async(data) => {
         try {
             console.log(errors);
-            let {marque, modele, type, couleur, nbPlaces, kilometrage, moteur, embrayage, plaque, prixLoc, prixKm, prixCaution, description, disponibilite} = data
+            let {marque, modele, type, couleur, nbPlaces, kilometrage, moteur, embrayage, plaque, baseFixe, prixKm, prixJour, prixCaution, description, disponibilite} = data
             let dataPhoto = fichier
             let photo;
             if (!(dataPhoto instanceof File) || dataPhoto === "" ){
@@ -87,11 +97,11 @@ const EditVehicule = () => {
                 photo = res.data
                 // console.log(photo, 'photo');
             }
-            let modif = await axios.put(`/api/vehicule/${id}`,{marque : marque, modele:modele, type:type, couleur:couleur, nbPlaces:nbPlaces, kilometrage:kilometrage, moteur:moteur, embrayage:embrayage, plaque:plaque, prixLoc:prixLoc, prixKm:prixKm, prixCaution:prixCaution, photo:photo, description:description, disponibilite:disponibilite}, {headers: {Authorization : token}})
+            let modif = await axios.put(`/api/vehicule/${id}`,{marque : marque, modele:modele, type:type, couleur:couleur, nbPlaces:nbPlaces, kilometrage:kilometrage, moteur:moteur, embrayage:embrayage, plaque:plaque, baseFixe:baseFixe, prixKm:prixKm,prixJour:prixJour, prixCaution:prixCaution, photo:photo, description:description, disponibilite:disponibilite}, {headers: {Authorization : token}})
             console.log(modif , 'modif');
             let destroy = await axios.post('/api/destroy', data.photo, {headers: {Authorization : token}})
             console.log(destroy, 'destroy');
-            return(window.location.href = '/admin/vehicules')     
+            return(navigate('/admin/vehicules'))     
         } catch (error) {
             console.log(error);
             return error
@@ -107,7 +117,6 @@ const EditVehicule = () => {
             value: 'manuel',
             label: 'manuel'
         }
-
     ]
 
     // let emb = car.embrayage
@@ -118,7 +127,7 @@ const EditVehicule = () => {
             </Snackbar>
             <Box sx={{ m: 5, p: 3 }}>
                 {/* <Box sx={{m:5, border:'black solid 2px', p:3}}> */}
-                <Typography variant="h3" sx={{ mb: 2 }}>
+                <Typography variant="h3" sx={{ mb: 2, textAlign:'center' }}>
                     Edit vehicule
                 </Typography>
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -290,18 +299,18 @@ const EditVehicule = () => {
                             fullWidth
                         />
                         <Controller
-                            render={({prixLoc}) => (
+                            render={({baseFixe}) => (
                                 <TextField
-                                {...register("prixLoc")}
-                                id="prixLoc"
-                                helperText="prixLoc(€)"
+                                {...register("baseFixe")}
+                                id="baseFixe"
+                                helperText="baseFixe(€)"
                                 variant="outlined"
                                 required
                                 />
                             )}
-                            name={"prixLoc"}
+                            name={"baseFixe"}
                             control={control}
-                            helperText={"prixLoc(€)"}
+                            helperText={"baseFixe(€)"}
                             fullWidth
                         />
                         <Controller
@@ -337,7 +346,21 @@ const EditVehicule = () => {
                     </Box>
                     <Box sx={{ display: "flex", mt: 5, flexDirection: "column" }}>
                     <Box sx={{ display: "flex", justifyContent: "space-around" }}>
-                        <Box></Box>
+                    <Controller
+                            render={({prixJour}) => (
+                                <TextField
+                                {...register("prixJour")}
+                                id="prixJour"
+                                helperText="prixJour(€)"
+                                variant="outlined"
+                                required
+                                />
+                            )}
+                            name={"prixJour"}
+                            control={control}
+                            // helperText={"prixJour(€)"}
+                            fullWidth
+                        />
                         <Controller
                             render={({disponibilite}) => (
                             <FormControlLabel
@@ -414,20 +437,20 @@ const EditVehicule = () => {
                     </Box>
                     </Box>
                 </Box>
-                <Button
-                    type="submit"
-                    variant="contained"
-                    // startIcon={<PersonAddAltIcon />}
-                    sx={{
-                    cursor: "pointer",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    m: "2rem auto 0",
-                    display: "flex",
-                    }}
-                >
-                    Modifier
-                </Button>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        // startIcon={<PersonAddAltIcon />}
+                        sx={{
+                        cursor: "pointer",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        m: "2rem auto 0",
+                        display: "flex",
+                        }}
+                    >
+                        Modifier
+                    </Button>
                 </form>
             </Box>
         </>

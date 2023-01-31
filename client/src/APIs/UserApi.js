@@ -12,30 +12,10 @@ function UserApi(token){
             const getUser = async () => {
                 try {
                     const res = await axios.get('/user/infos', {headers: {Authorization : token}}) 
-                    console.log(res, "logged");
-                    setDataUser(res)
                     setIsLogged(true)
+                    setDataUser(res.data)
                     res.data.role === 1 ? setIsAdmin(true) : setIsAdmin(false)
-                    // Pour plus trad , 
-                    // if (res.data.role === 1) {
-                    //     setIsAdmin(true);
-                    //     console.log("Administrateur");
-                    // }else if(res.data.role === 2){
-                    //     setIsSuperAdmin(true);
-                    //     console.log("Super-Administrateur");
-                    // }
-                        // switch (res.data.role) {
-                        //     case 1:
-                        //         setIsAdmin(true);
-                        //         console.log("Administrateur");
-                        //       break;
-                        //     case 2:
-                        //         setIsSuperAdmin(true);
-                        //         console.log("Super-Administrateur");
-                        //         break;
-                        //     default:
-                        //       console.log("Not Admin and Not SuperAdmin");
-                        // }
+                       
                 } catch (error) {
                     alert(error.response.data.msg)
                 }

@@ -21,6 +21,7 @@ app.use(cors())
 //Routes
 app.use("/user", require('./routes/userRouter'))
 app.use("/api", require('./routes/vehiculeRouter'))
+app.use("/order", require('./routes/orderRouter'))
 app.use("/api", require('./routes/upload'))
 
 // connect to MongoDB

@@ -51,7 +51,7 @@ const vehiculeSchema = new Schema({
         type : String,
         required : true
     },
-    prixLoc : {
+    baseFixe : {
         type : Number,
         required : true
     },
@@ -59,10 +59,14 @@ const vehiculeSchema = new Schema({
         type : Number,
         required : true
     },
+    prixJour : {
+        type : Number,
+        required : true
+    },
     prixCaution : {
         type : Number,
         required : true
-    }
+    },
 },{timestamps : true})
 
 const Vehicules = model('Vehicule', vehiculeSchema);

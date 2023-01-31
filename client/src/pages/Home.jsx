@@ -4,6 +4,8 @@ import { Container, Stack, Grid, Item, Typography, IconButton,Box, Button, TextF
 import banner from '../assets/banners/banner7.png';
 import { useState, useContext } from "react";
 import { GlobalState } from "../Components/GlobalState";
+import VehiculeCard from "../Components/VehiculeCard";
+import SearchIcon from '@mui/icons-material/Search';
 
 
 const Home = () => {
@@ -15,7 +17,10 @@ const Home = () => {
     const state = useContext(GlobalState)
     const [isLogged, setIsLogged] = state.userApi.isLogged;
     const [isAdmin, setIsAdmin] = state.userApi.isAdmin;
+    const [vehicules, setVehicules] = state.vehiculesApi.vehicules
+    
 	// const [isSuperAdmin, setIsSuperAdmin] = state.userApi.isLogged
+
 
 
 
@@ -34,9 +39,13 @@ const Home = () => {
         }
     }
 
+    console.log(vehicules, 'vehicules');
+
+
     return(
         // <CategoryCard />
         <>
+        {/* <Container maxWidth="xl" sx={{border:"2px solid black", backgroundColor:'#000000', height:'100vh', padding:'3rem', backgroundImage: 'linear-gradient(to right top, #000000, #532623, #975420, #bb9900, #a8eb12)', height:'100vh'}} > */}
         <Container maxWidth="xl" sx={{border:"2px solid black", backgroundColor:'#000000', height:'100vh', padding:'3rem', backgroundImage:`url(${banner})`, backgroundRepeat:'no-repeat', backgroundPosition: 'center', backgroundSize: 'cover', height:'100vh'}} >
         {/* , backgroundAttachment: 'fixed' */}
             <Box></Box>
@@ -63,9 +72,9 @@ const Home = () => {
                         id="input-with-icon-textfield"
                         label="TextField"
                         InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    {/* <SearchIcon /> */}
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <SearchIcon />
                                 </InputAdornment>
                             ),
                         }}
@@ -87,11 +96,27 @@ const Home = () => {
                 Fugit tempora inventore animi aliquid est rem saepe illum, ipsa quae. Pariatur, totam? Quia non, nostrum voluptatum eaque expedita, placeat illo commodi voluptate veritatis vel, sequi quidem asperiores quo aperiam.
                 Et ratione, iusto laborum iure, quia eius distinctio, autem fuga corporis architecto quod maiores cumque facere dignissimos minima. Ad a aliquid distinctio ipsa iusto impedit laboriosam ipsam? Nisi, impedit est.
             </Typography>              */}
-            <Box sx={{backgroundImage:`url(${banner})`, backgroundRepeat:'no-repeat', backgroundPosition: 'center', backgroundSize: 'cover', backgroundAttachment: 'fixed', height:'100%'}}>
+            <Box sx={{backgroundImage:`url(${banner})`, backgroundRepeat:'no-repeat', backgroundPosition: 'center', backgroundSize: 'cover', backgroundAttachment: 'fixed', mb:2}}>
                 {/* <CategoryCard /> */}
                 {/* <Grid container spacing={4}> */}
                     <CategoryCard />
                 {/* </Grid> */}
+            </Box>
+            <Box sx={{width:'90%', border: 'solid white 2px', m:"auto"}}></Box>
+            <Box sx={{color : 'white'}}>
+                <Typography variant="h3" sx={{p:5, textAlign: 'center', color:'#A7754D'}}>Tous nos véhicules</Typography>
+                <Box>
+                    <Grid container spacing={3}>
+                        {vehicules.map((vehicule) => (
+                            <Grid item xs = {12} md={4}>
+                                {/* <VehiculeCard key={vehicule._id} vehicule={vehicule}/> */}
+                                <VehiculeCard vehicule={vehicule}/>
+                            </Grid>
+                        ))}
+                        {/* <Grid item xs = {12} md={4}></Grid>
+                        <Grid item xs = {12} md={4}></Grid> */}
+                    </Grid>
+                </Box>
             </Box>
         </Container>
         </>

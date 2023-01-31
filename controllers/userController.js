@@ -76,7 +76,7 @@ const userCtrl = {
                 path : '/user/refresh_token'
             })
             console.log("connected");
-            res.json({accesstoken})
+            res.json({accesstoken, email : user.email, id: user._id, firstName:user.firstName, lastName:user.lastName, role:user.role, })
         } catch (error) {
             console.log(error, "ERROR CTRL");
             return res.status(500).json(error.message)

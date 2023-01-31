@@ -6,7 +6,6 @@ import axios from 'axios';
 import { 
     Box, 
     Typography,
-    FormControl,
     TextField,
     Checkbox,
     FormControlLabel,
@@ -19,26 +18,9 @@ import {
 
 
 const CreateVehicule = () => {
-    // const [marque, setMarque] = useState('')  
-    // const [modele, setModele] = useState('')  
-    // const [type, setType] = useState('')  
-    // const [couleur, setCouleur] = useState('')  
-    // const [nbPlaces, setNbPlaces] = useState('')  
-    // const [kilometrage, setKilometrage] = useState('')  
-    // const [moteur, setMoteur] = useState('')  
-    // const [embrayage, setEmbrayage] = useState('')  
-    // const [plaque, setPlaque] = useState('')  
-    // const [prixLoc, setPrixLoc] = useState('')  
-    // const [PrixKm, setPrixKm] = useState('')  
-    // const [PrixCaution, setPrixCaution] = useState('')  
-    // const [disponibilite, setDisponibilite] = useState(false)  
-    // const [photos, setPhotos] = useState('')  
-    // const [description, setDescription] = useState('')  
     const [box, setBox] = useState(false)
-    const id = useParams().id
     const state = useContext(GlobalState)
     const [token, setToken] = state.token
-    const [car, setCar] = useState([])
     const [fileName, setFileName] = useState(null)
     const label = { inputProps: { 'aria-label': 'Disponibilité' } };
     const [fichier, setFichier] = useState({})
@@ -57,7 +39,7 @@ const CreateVehicule = () => {
     const onSubmit = async(data) => {
         try {
             console.log(errors);
-            let {marque, modele, type, couleur, nbPlaces, kilometrage, moteur, embrayage, plaque, prixLoc, prixKm, prixCaution, description, disponibilite} = data
+            let {marque, modele, type, couleur, nbPlaces, kilometrage, moteur, embrayage, plaque, baseFixe, prixKm, prixJour, prixCaution, description, disponibilite} = data
             let dataPhoto = fichier
             let photo;
             if (!(dataPhoto instanceof File) || dataPhoto === "" ){
@@ -76,7 +58,7 @@ const CreateVehicule = () => {
                 photo = res.data
                 // console.log(photo, 'photo');
             }
-            let create = await axios.post('/api/vehicules',{marque : marque, modele:modele, type:type, couleur:couleur, nbPlaces:nbPlaces, kilometrage:kilometrage, moteur:moteur, embrayage:embrayage, plaque:plaque, prixLoc:prixLoc, prixKm:prixKm, prixCaution:prixCaution, photo:photo, description:description, disponibilite:disponibilite}, {headers: {Authorization : token}})
+            let create = await axios.post('/api/vehicules',{marque : marque, modele:modele, type:type, couleur:couleur, nbPlaces:nbPlaces, kilometrage:kilometrage, moteur:moteur, embrayage:embrayage, plaque:plaque, baseFixe:baseFixe, prixKm:prixKm, prixJour:prixJour, prixCaution:prixCaution, photo:photo, description:description, disponibilite:disponibilite}, {headers: {Authorization : token}})
             console.log(create , 'create');
             return(window.location.href = '/admin/vehicules')     
         } catch (error) {
@@ -94,19 +76,16 @@ const CreateVehicule = () => {
             value: 'manuel',
             label: 'manuel'
         }
-
     ]
 
-    // let emb = car.embrayage
     return (
         <>
             <Snackbar autoHideDuration={5000}>
-                <Alert variant='filled' severity="error">Le véhicule n'a pas pu être modifié</Alert>
+            <Alert variant='filled' severity="error">Le véhicule n'a pas pu être modifié</Alert>
             </Snackbar>
             <Box sx={{ m: 5, p: 3 }}>
-                {/* <Box sx={{m:5, border:'black solid 2px', p:3}}> */}
-                <Typography variant="h3" sx={{ mb: 2 }}>
-                    Edit vehicule
+                <Typography variant="h3" sx={{ mb: 2, textAlign:'center' }}>
+                    Ajouter un vehicule
                 </Typography>
                 <form onSubmit={handleSubmit(onSubmit)}>
                 <Box
@@ -267,27 +246,29 @@ const CreateVehicule = () => {
                                 id="plaque"
                                 helperText="plaque"
                                 variant="outlined"
+                                pattern = '^[A-Z]{2}[-][0-9]{3}[-][A-Z]{2}$'
                                 required
                                 />
                             )}
                             name={"plaque"}
                             control={control}
                             helperText={"plaque"}
+                            pattern = '^[A-Z]{2}[-][0-9]{3}[-][A-Z]{2}$'
                             fullWidth
                         />
                         <Controller
-                            render={({prixLoc}) => (
+                            render={({baseFixe}) => (
                                 <TextField
-                                {...register("prixLoc")}
-                                id="prixLoc"
-                                helperText="prixLoc(€)"
+                                {...register("baseFixe")}
+                                id="baseFixe"
+                                helperText="baseFixe(€)"
                                 variant="outlined"
                                 required
                                 />
                             )}
-                            name={"prixLoc"}
+                            name={"baseFixe"}
                             control={control}
-                            helperText={"prixLoc(€)"}
+                            helperText={"baseFixe(€)"}
                             fullWidth
                         />
                         <Controller
@@ -323,7 +304,22 @@ const CreateVehicule = () => {
                     </Box>
                     <Box sx={{ display: "flex", mt: 5, flexDirection: "column" }}>
                     <Box sx={{ display: "flex", justifyContent: "space-around" }}>
-                        <Box></Box>
+                        <Controller
+                            render={({prixJour}) => (
+                                <TextField
+                                {...register("prixJour")}
+                                id="prixJour"
+                                helperText="prixJour(€)"
+                                variant="outlined"
+                                required
+                                />
+                            )}
+                            name={"prixJour"}
+                            control={control}
+                            // helperText={"prixJour(€)"}
+                            fullWidth
+                        />
+
                         <Controller
                             render={({disponibilite}) => (
                             <FormControlLabel

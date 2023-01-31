@@ -13,6 +13,8 @@ import {
     FormHelperText,
     Box,
     Link,
+    Snackbar,
+    Alert
 } from '@mui/material';
 // const axios = require('axios');
 import LoginIcon from '@mui/icons-material/Login';
@@ -23,12 +25,13 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 // import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { GlobalState } from '../Components/GlobalState';
 import { useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 
 const Login = () => {
     // const [user, setUser] = useState({email:'', password:''})
+    const location = useLocation();
     const state = useContext(GlobalState)
 	const [isLogged, setIsLogged] = state.userApi.isLogged
 	const [isAdmin, setIsAdmin] = state.userApi.isLogged
@@ -36,9 +39,20 @@ const Login = () => {
     const [erreur, setErreur] = useState({})
     const [pwd, setPwd] = useState('');
     const [showPassword, setShowPassword] = useState(false)
+    const [errorFromRedirect, setErrorFromRedirect] = useState('');
+    
 
     const navigate = useNavigate()
     const {register, handleSubmit, formState: {errors}} = useForm()    
+
+    useEffect(() => {
+        // console.log(location.state, 'location');
+        // if (location.state.data) {
+        //     setErrorFromRedirect(location.state.data)
+        // }
+      
+    }, [])
+    
 
 
     const connexion = async(data, event) => {
@@ -46,15 +60,19 @@ const Login = () => {
         // console.log(data, 'data');
         let {email, password} = data
         try {
-            await axios.post("/user/login", { email, password });            
+            let user = await axios.post("/user/login", { email, password });    
+            // console.log("user: ", user);
             localStorage.setItem("firstLogin", true)
+            localStorage.setItem("lastNameUser", user.data.lastName)
+            localStorage.setItem("firstNameUser", user.data.firstName )
+            localStorage.setItem("emailUser", user.data.email )
+            localStorage.setItem("roleUser", user.data.role )
             setIsLogged(true);
-            // navigate('/')
-            console.log(isAdmin, 'isAdmin');
-            isAdmin ? window.location.href = '/admin/vehicules' : window.location.href = '/'
-            // isAdmin || isSuperAdmin ? window.location.href = '/admin/vehicules' : window.location.href = '/'
+            navigate('/')
+            // console.log(isAdmin, 'isAdmin');
+            // isAdmin ? window.location.href = '/admin' : window.location.href = '/'
         } catch (error) {
-                console.log("erreur status 400");
+                // console.log("erreur status 400");
                 setErreur({msg: 'Au moins un de vos identifiants est incorrect'})
         }
     }
@@ -75,6 +93,9 @@ const Login = () => {
 
       return(
         <Container maxWidth="xs" sx={{border:'#285181 solid 2px', padding: '3rem', marginTop:'5rem'}}>
+            <Snackbar autoHideDuration={5000}>
+                <Alert variant='filled' severity="error">{errorFromRedirect}</Alert>
+            </Snackbar>
             <form onSubmit={handleSubmit(connexion)}>
                 <Typography variant='h5' sx={{textAlign:'center', color:'#285181'}}>Connexion</Typography>
                 <p style={{textAlign: 'center', margin: '1rem 0', color: '#CC0001'}}>{erreur?.msg}</p>
@@ -121,10 +142,10 @@ const Login = () => {
                             {/* <Button type="submit" color='secondary' sx={{cursor : 'pointer', justifyContent: 'center', alignItems: 'center', m:'2rem auto 0'}}> */}
                         </Button>
                     <Box sx={{width:"100%", display:"flex", justifyContent: "space-between", m:3, mb:0, mt:5}}>
-                        <Link to="/register" sx={{cursor: "pointer"}}>
+                        <Link href="/user/register" sx={{cursor: "pointer"}}>
                             <Typography variant="caption">Créer un compte</Typography>
                         </Link>
-                        <Link to="/pwdForgotten" sx={{cursor: "pointer"}}>
+                        <Link href="/pwdForgotten" sx={{cursor: "pointer"}}>
                             <Typography variant="caption">Mot de passe oublié</Typography>
                         </Link>
                     </Box>

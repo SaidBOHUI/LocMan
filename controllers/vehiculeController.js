@@ -64,7 +64,7 @@ const vehiculeCtrl = {
     createVehicule : async(req, res) => {
         // console.log(req,'req');
         try {
-            const {plaque, marque, modele, disponibilite, description, photo, type, couleur, nbPlaces, kilometrage, moteur, embrayage, prixLoc, prixKm, prixCaution} = req.body
+            const {plaque, marque, modele, disponibilite, description, photo, type, couleur, nbPlaces, kilometrage, moteur, embrayage, baseFixe, prixKm, prixJour, prixCaution} = req.body
             if (!photo)return(res.status(400).json({msg: "Aucune image upload "}))
                 
             // const files = req.files
@@ -91,7 +91,7 @@ const vehiculeCtrl = {
             const vehicule = await Vehicule.findOne({plaque})
             if (vehicule) return res.status(400).json({msg : "Un vehicule existe déja à cette immatriculation"})
 
-            const newVehicule = new Vehicule({ plaque, marque, modele, disponibilite, description, photo, type, couleur, nbPlaces, kilometrage, moteur, embrayage, prixLoc, prixKm, prixCaution })
+            const newVehicule = new Vehicule({ plaque, marque, modele, disponibilite, description, photo, type, couleur, nbPlaces, kilometrage, moteur, embrayage, baseFixe, prixKm, prixJour, prixCaution })
 
             await newVehicule.save() 
 
@@ -115,11 +115,11 @@ const vehiculeCtrl = {
     updateVehicule : async(req, res) => {
         try {
             console.log('in controller');
-            // const {plaque, marque, modele, disponibilite, description, type, couleur, nbPlaces, kilometrage, moteur, embrayage, prixLoc, prixKm, prixCaution} = req.body 
-            const {plaque, marque, modele, disponibilite, description, photo, type, couleur, nbPlaces, kilometrage, moteur, embrayage, prixLoc, prixKm, prixCaution} = req.body 
+            // const {plaque, marque, modele, disponibilite, description, type, couleur, nbPlaces, kilometrage, moteur, embrayage, baseFixe, prixKm, prixCaution} = req.body 
+            const {plaque, marque, modele, disponibilite, description, photo, type, couleur, nbPlaces, kilometrage, moteur, embrayage, baseFixe, prixKm, prixJour, prixCaution} = req.body 
             if (!photo)return(res.status(400).json({msg: "Aucune image upload "}))
            
-            await Vehicule.findOneAndUpdate({_id : req.params.id},{plaque, marque, modele, disponibilite, description, photo, type, couleur, nbPlaces, kilometrage, moteur, embrayage, prixLoc, prixKm, prixCaution})
+            await Vehicule.findOneAndUpdate({_id : req.params.id},{plaque, marque, modele, disponibilite, description, photo, type, couleur, nbPlaces, kilometrage, moteur, embrayage, baseFixe, prixKm,prixJour, prixCaution})
             res.json({msg : 'Infos du véhicule modifiées'})
         } catch (error) {
             console.log(error, 'error back');

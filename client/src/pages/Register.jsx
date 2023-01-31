@@ -111,7 +111,7 @@ const Register = () => {
                     type="submit"
                     variant="contained" 
                     startIcon={<PersonAddAltIcon />} 
-                    sx={{cursor : 'pointer', justifyContent: 'center', alignItems: 'center', m:'2rem auto 0'}} 
+                    sx={{cursor : 'pointer', justifyContent: 'center', alignItems: 'center', m:'2rem auto 0', display:'flex'}} 
                 >
                     Créer
                 </Button>
